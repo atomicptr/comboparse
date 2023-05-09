@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comboparse"
+authors = [
+    {name = "Christopher Kaster", email = "me@atomicptr.de"},
+]
+description = "Drop-in replacement for argparse with support for environment variables."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["version"]
+
+[tool.setuptools]
+packages = {find = {exclude=["tests*"]}}
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
