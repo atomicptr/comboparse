@@ -57,6 +57,19 @@ and now the env vars from before would be COMBO_FILENAME, COMBO_COUNT, COMBO_VER
 The names can't be adjusted beyond setting the prefix and determined by the actions "dest" value.
 Aka whatever argparse would determine your "args.NAME" to be like.
 
+### Mixing CLI arguments and environment variables
+
+While this should work as this tool simply adds its own CLI arguments to argparser, if you
+do something like
+
+```bash
+$ COUNT=10 my-tool --count 5 --verbose
+```
+
+The verbose flag will work as expected, but which count is taken isn't guaranteed by thiis library.
+(aka while now maybe the environment variable has precedence, in the future this might randomly
+change so don't rely on this!)
+
 ### Action Type: count
 
 Count actions are usually provided like this:

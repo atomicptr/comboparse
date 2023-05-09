@@ -1,3 +1,4 @@
+"""Drop-in replacement for argparse with support for environment variables."""
 import re
 import sys
 from argparse import ArgumentParser, Namespace, SUPPRESS
@@ -6,13 +7,18 @@ from typing import Optional
 
 
 class ComboParser(ArgumentParser):
+    """Use this instead of argparse.ArgumentParser to also make use of
+    environment variables"""
     _env_prefix: str = None
 
-    def __init__(self, env_prefix: str = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, env_prefix: str = None, **kwargs):
+        """Create a new ComboParser, supports env_prefix option!"""
+        super().__init__(**kwargs)
         self._env_prefix = env_prefix
 
+    # pylint: disable=too-many-branches
     def parse_args(self, args=None, namespace: Namespace = None) -> Namespace:
+        """Parse arguments (and add environment based values to it)"""
         if args is None:
             args = sys.argv[1:]
         else:
@@ -68,22 +74,22 @@ class ComboParser(ArgumentParser):
 
                 # list type argument
                 if action.nargs is not None or is_append_action:
-                    for index, v in enumerate(value.split(",")):
+                    for index, val in enumerate(value.split(",")):
                         if index != 0 and is_append_action:
                             args.append(action.option_strings[0])
-                        args.append(v)
+                        args.append(val)
                     continue
 
                 # nothing left just append
                 args.append(value)
 
-        print(args)
         return super().parse_args(args=args, namespace=namespace)
 
     def _env_var_by_dest(self, dest: str) -> Optional[str]:
         return getenv(self.create_env_var_name(dest))
 
     def create_env_var_name(self, name: str) -> str:
+        """Create an environment variable name with prefix if set"""
         prefix = ""
 
         if self._env_prefix is not None:
@@ -92,8 +98,10 @@ class ComboParser(ArgumentParser):
 
 
 def clean_env_name(name: str) -> str:
+    """Clean the name of a variable to be an usable environment variable"""
     return re.sub(r"([^a-zA-Z_]+[^a-zA-Z0-9_]*)", "_", name)
 
 
 def strip_slashes(name: str) -> str:
+    """Remove slashes"""
     return name.replace("-", "")
