@@ -20,6 +20,8 @@ dynamic = ["version"]
 [tool.setuptools]
 packages = {find = {exclude=["tests*"]}}
 
+[tool.setuptools_scm]
+
 [tool.pytest.ini_options]
 addopts = [
     "--import-mode=importlib",
