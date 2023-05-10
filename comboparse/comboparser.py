@@ -31,9 +31,6 @@ class ComboParser(ArgumentParser):
             if action.dest is not SUPPRESS and action.default is not SUPPRESS:
                 value = self._env_var_by_dest(action.dest)
 
-                print(action)
-                print(self.create_env_var_name(action.dest), value)
-
                 action_name = type(action).__name__
                 is_append_const_action = action_name == "_AppendConstAction"
 
